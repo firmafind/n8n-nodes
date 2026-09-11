@@ -56,4 +56,4 @@ Pre-configured workflow templates are available in the [templates/](https://gith
 
 ## License
 
-[MIT](LICENSE)
+[FSL-1.1-Apache-2.0](LICENSE)
