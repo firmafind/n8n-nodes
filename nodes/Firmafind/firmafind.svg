@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="60" height="60" fill="none">
+  <rect width="60" height="60" rx="12" fill="#18181B"/>
+  <!-- Austrian Flag Accent Badge -->
+  <path d="M14 16H46V22H14V16Z" fill="#EF4444"/>
+  <path d="M14 22H46V28H14V22Z" fill="#FFFFFF"/>
+  <path d="M14 28H46V34H14V28Z" fill="#EF4444"/>
+  <!-- Building / Register Grid Silhouette -->
+  <path d="M18 46V36H42V46H18Z" fill="#3B82F6"/>
+  <path d="M22 39H26V43H22V39Z" fill="#FFFFFF"/>
+  <path d="M34 39H38V43H34V39Z" fill="#FFFFFF"/>
+  <!-- Magnifying Search Accent -->
+  <circle cx="41" cy="27" r="5" stroke="#F59E0B" stroke-width="2.5" fill="none"/>
+  <path d="M44.5 30.5L48 34" stroke="#F59E0B" stroke-width="2.5" stroke-linecap="round"/>
+</svg>

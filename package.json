@@ -1,0 +1,52 @@
+{
+  "name": "@firmafind/n8n-nodes-firmafind",
+  "version": "0.1.3",
+  "description": "n8n community node for the Austrian company register (Firmenbuch) and financial data via firmafind API",
+  "keywords": [
+    "n8n-community-node-package",
+    "firmafind",
+    "firmenbuch",
+    "austria",
+    "oesterreich",
+    "company-data",
+    "vat-validation",
+    "insolvency",
+    "financials"
+  ],
+  "license": "MIT",
+  "homepage": "https://firmafind.at",
+  "author": {
+    "name": "firmafind",
+    "email": "support@firmafind.at",
+    "url": "https://firmafind.at"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/firmafind/n8n-nodes.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc && npm run copy:icons",
+    "copy:icons": "copyfiles -u 1 nodes/**/*.{png,svg} dist/",
+    "dev": "tsc --watch",
+    "lint": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "files": [
+    "dist"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "credentials": [
+      "dist/credentials/FirmafindApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/Firmafind/Firmafind.node.js"
+    ]
+  },
+  "devDependencies": {
+    "copyfiles": "^2.4.1",
+    "n8n-workflow": "^1.60.0",
+    "typescript": "^5.6.0"
+  }
+}
