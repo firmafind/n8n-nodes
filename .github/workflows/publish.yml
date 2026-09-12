@@ -1,0 +1,61 @@
+name: Publish to npm
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write # for npm provenance
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    # skip if commit message contains [skip publish]
+    if: "!contains(github.event.head_commit.message, '[skip publish]')"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+
+      - name: Check if version already published
+        id: version-check
+        run: |
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          echo "Local version: $PACKAGE_VERSION"
+          echo "package-version=$PACKAGE_VERSION" >> "$GITHUB_OUTPUT"
+
+          PUBLISHED_VERSION=$(npm view @firmafind/n8n-nodes-firmafind version 2>/dev/null || echo "not-found")
+          echo "Published version: $PUBLISHED_VERSION"
+
+          if [ "$PACKAGE_VERSION" = "$PUBLISHED_VERSION" ]; then
+            echo "Version $PACKAGE_VERSION already on npm — skipping publish."
+            echo "should-publish=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Version $PACKAGE_VERSION not yet on npm — will publish."
+            echo "should-publish=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install dependencies
+        if: steps.version-check.outputs.should-publish == 'true'
+        run: npm install
+
+      - name: Lint
+        if: steps.version-check.outputs.should-publish == 'true'
+        run: npm run lint
+
+      - name: Build
+        if: steps.version-check.outputs.should-publish == 'true'
+        run: npm run build
+
+      - name: Publish to npm
+        if: steps.version-check.outputs.should-publish == 'true'
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

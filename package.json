@@ -24,7 +24,9 @@
     "type": "git",
     "url": "https://github.com/firmafind/n8n-nodes.git"
   },
-  "main": "index.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc && npm run copy:icons",
     "copy:icons": "copyfiles -u 1 nodes/**/*.{png,svg} dist/",
