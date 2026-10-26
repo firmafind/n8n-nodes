@@ -9,7 +9,7 @@ export class Firmafind implements INodeType {
 		version: 1,
 		subtitle: '={{$parameter["resource"] + ": " + $parameter["operation"]}}',
 		description:
-			"Österreichische Firmenbuchdaten, UID-Validierung und Bilanzen abrufen",
+			"Österreichische Firmenbuchdaten, Änderungen, Urkunden und Bilanzen abrufen",
 		defaults: {
 			name: "firmafind",
 		},
@@ -76,15 +76,15 @@ export class Firmafind implements INodeType {
 						name: "Search (Firmensuche)",
 						value: "search",
 						description:
-							"Nach Firmen nach Name, Suchbegriff oder Firmenbuchnummer suchen",
+							"Firmen nach Name oder Suchbegriff suchen (mindestens 3 Zeichen)",
 						action: "Firma suchen",
 						routing: {
 							request: {
 								method: "GET",
-								url: "/companies",
+								url: "/search",
 								qs: {
-									q: "={{$parameter.searchQuery}}",
-									exactMatch: "={{$parameter.exactMatch}}",
+									name: "={{$parameter.searchQuery}}",
+									exact: "={{$parameter.exactMatch}}",
 								},
 							},
 						},
@@ -98,7 +98,7 @@ export class Firmafind implements INodeType {
 						routing: {
 							request: {
 								method: "GET",
-								url: "=/companies/{{$parameter.fnr}}",
+								url: "=/company/{{$parameter.fnr}}",
 							},
 						},
 					},
@@ -112,6 +112,10 @@ export class Firmafind implements INodeType {
 							request: {
 								method: "GET",
 								url: "/company/changes",
+								qs: {
+									from: "={{$parameter.from}}",
+									to: "={{$parameter.to}}",
+								},
 							},
 						},
 					},
@@ -143,6 +147,10 @@ export class Firmafind implements INodeType {
 							request: {
 								method: "GET",
 								url: "=/financials/{{$parameter.fnr}}",
+								qs: {
+									years: "={{$parameter.years}}",
+									include: "={{$parameter.include.join(',')}}",
+								},
 							},
 						},
 					},
@@ -199,8 +207,9 @@ export class Firmafind implements INodeType {
 					},
 				},
 				default: "",
-				placeholder: "z. B. Red Bull oder 338647a",
-				description: "Name des Unternehmens oder Firmenbuchnummer",
+				placeholder: "z. B. Muster GmbH",
+				description:
+					"Name des Unternehmens (mindestens 3 Zeichen); für eine Firmenbuchnummer die Operation Get Details verwenden",
 			},
 			{
 				displayName: "Exakte Übereinstimmung",
@@ -233,6 +242,93 @@ export class Firmafind implements INodeType {
 				placeholder: "z. B. 123456a",
 				description:
 					"Die Firmenbuchnummer der österreichischen Gesellschaft (mit Prüfbuchstaben)",
+			},
+			{
+				displayName: "Von (YYYY-MM-DD)",
+				name: "from",
+				type: "string",
+				required: true,
+				default: "",
+				placeholder: "2026-10-20",
+				description:
+					"Datum im Format YYYY-MM-DD. Der gesamte Zeitraum darf maximal 7 Tage umfassen.",
+				displayOptions: {
+					show: {
+						resource: ["company"],
+						operation: ["getChanges"],
+					},
+				},
+			},
+			{
+				displayName: "Bis (YYYY-MM-DD)",
+				name: "to",
+				type: "string",
+				required: true,
+				default: "",
+				placeholder: "2026-10-20",
+				description:
+					"Datum im Format YYYY-MM-DD. Der gesamte Zeitraum darf maximal 7 Tage umfassen.",
+				displayOptions: {
+					show: {
+						resource: ["company"],
+						operation: ["getChanges"],
+					},
+				},
+			},
+			{
+				displayName: "Berichtsperioden",
+				name: "years",
+				type: "number",
+				default: 5,
+				typeOptions: {
+					minValue: 1,
+					maxValue: 5,
+					numberPrecision: 0,
+				},
+				description:
+					"Anzahl der letzten Berichtsperioden (1–5). 1 Periode: 15 Credits; 2–5 Perioden: 25 Credits.",
+				displayOptions: {
+					show: {
+						resource: ["financials"],
+						operation: ["getFinancials"],
+					},
+				},
+			},
+			{
+				displayName: "Finanzdaten einschließen",
+				name: "include",
+				type: "multiOptions",
+				default: ["summary", "periods", "changes", "evidence"],
+				options: [
+					{
+						name: "Zusammenfassung",
+						value: "summary",
+					},
+					{
+						name: "Berichtsperioden",
+						value: "periods",
+					},
+					{
+						name: "Veränderungen",
+						value: "changes",
+					},
+					{
+						name: "Quellennachweise",
+						value: "evidence",
+					},
+					{
+						name: "Dokumente",
+						value: "documents",
+					},
+				],
+				description:
+					"Gewünschte Erweiterungen der Finanzdaten. Die Zusammenfassung wird immer geliefert.",
+				displayOptions: {
+					show: {
+						resource: ["financials"],
+						operation: ["getFinancials"],
+					},
+				},
 			},
 		],
 	};

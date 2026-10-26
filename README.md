@@ -1,6 +1,6 @@
 # n8n-nodes-firmafind
 
-Official [n8n](https://n8n.io/) community node for [firmafind](https://firmafind.at), a modern REST API for Austrian company data (Firmenbuch, GISA, UID/VAT validation, and annual financial statements).
+Official [n8n](https://n8n.io/) community node for [firmafind](https://firmafind.at), a modern REST API for Austrian company data (Firmenbuch company records, register changes, documents, and annual financial statements).
 
 ![firmafind n8n node](https://firmafind.at/opengraph-image)
 
@@ -8,10 +8,10 @@ Official [n8n](https://n8n.io/) community node for [firmafind](https://firmafind
 
 ## Features
 
-- **Search Companies**: Search registered Austrian entities by name, keyword, or Firmenbuchnummer (FN).
+- **Search Companies**: Search registered Austrian entities by name or keyword (at least three characters); use Get Details for a Firmenbuchnummer (FN).
 - **Get Details**: Retrieve normalized master data, registered office, legal form, UID/VAT status, active status, and authorized representatives (Geschäftsführer, Prokuristen, Vorstand).
-- **Company Changes**: Poll daily Firmenbuch change logs and new registrations for monitoring and compliance.
-- **Financials**: Retrieve normalized balance sheet items and financial metrics from annual filings (Jahresabschlüsse).
+- **Company Changes**: Retrieve Firmenbuch changes and new registrations using required `from` and `to` dates (YYYY-MM-DD, maximum seven-day range).
+- **Financials**: Retrieve normalized balance sheet items and financial metrics from annual filings (Jahresabschlüsse). Select 1–5 reporting periods and optional expansions. One period costs 15 credits; 2–5 periods cost 25 credits.
 - **Documents**: Search available court filings, statutes, and balance sheet PDFs/XMLs.
 
 ---
@@ -22,7 +22,7 @@ Official [n8n](https://n8n.io/) community node for [firmafind](https://firmafind
 
 1. Go to **Settings > Community Nodes** in your n8n instance.
 2. Select **Install a community node**.
-3. Enter `n8n-nodes-firmafind` into the input field.
+3. Enter `@firmafind/n8n-nodes-firmafind` into the input field.
 4. Agree to the risks and click **Install**.
 
 Once installed, restart your n8n instance (if running in Docker or PM2).
@@ -36,6 +36,10 @@ Once installed, restart your n8n instance (if running in Docker or PM2).
 3. In n8n, create a new credential of type **firmafind API** and paste your `ff_live_...` API key.
 
 ---
+
+## API compatibility
+
+Version 0.1.4 uses `/api/search`, `/api/company/{fnr}`, `/api/company/changes`, `/api/financials/{fnr}`, and `/api/documents` with `x-api-key` authentication. Existing operation and parameter names are retained. Existing Company Changes workflows must supply the new required date fields. Financials keeps the API default of five periods.
 
 ## Example Workflows
 

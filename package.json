@@ -1,6 +1,6 @@
 {
   "name": "@firmafind/n8n-nodes-firmafind",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "n8n community node for the Austrian company register (Firmenbuch) and financial data via firmafind API",
   "keywords": [
     "n8n-community-node-package",

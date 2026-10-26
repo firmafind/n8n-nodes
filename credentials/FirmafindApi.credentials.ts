@@ -34,7 +34,7 @@ export class FirmafindApi implements ICredentialType {
 	test: ICredentialTestRequest = {
 		request: {
 			baseURL: "https://firmafind.at/api",
-			url: "/companies?name=Red+Bull&exactMatch=false",
+			url: "/search?name=Muster&exact=false",
 		},
 	};
 }
